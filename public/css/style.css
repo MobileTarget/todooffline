@@ -1,0 +1,272 @@
+.messages {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-align-content: center;
+	-ms-flex-line-pack: center;
+	align-content: center;
+	-webkit-box-align: center;
+	-moz-box-align: center;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	align-items: center;
+	margin-bottom: 20px;
+}
+.messages .message {
+	-webkit-box-flex: 1;
+	-moz-box-flex: 1;
+	-webkit-flex: 1 1 auto;
+	-ms-flex: 1 1 auto;
+	flex: 1 1 auto;
+	padding: 10px;
+	-webkit-transition: all 250ms ease-in-out;
+	transition: all 250ms ease-in-out;
+	overflow: hidden;
+	-webkit-transform: translate3d(0, 0, 0);
+	-moz-transform: translate3d(0, 0, 0);
+	transform: translate3d(0, 0, 0);
+	text-align: right;
+	padding-left: 30px;
+}
+.messages .message::before {
+	content: '';
+	position: absolute;
+	z-index: -1;
+	bottom: 0;
+	left: initial;
+	right: 5px;
+	height: 10px;
+	border: 0px;
+	border-right: 20px solid #D7E4ED;
+	background: #D7E4ED;
+	-webkit-border-bottom-left-radius: 10px 10px;
+	-moz-border-radius-bottomleft: 10px 10px;
+	border-bottom-left-radius: 10px 10px;
+	-webkit-transform: translate(5px, -10px);
+	-moz-transform: translate(5px, -10px);
+	-ms-transform: translate(5px, -10px);
+	-o-transform: translate(5px, -10px);
+	transform: translate(5px, -10px);
+}
+.messages .message::after {
+	content: '';
+	position: absolute;
+	z-index: -1;
+	bottom: 0;
+	left: initial;
+	right: 5px;
+	width: 20px;
+	height: 10px;
+	background: #fff;
+	-webkit-border-bottom-left-radius: 10px 10px;
+	-moz-border-radius-bottomleft: 10px 10px;
+	border-bottom-left-radius: 10px 10px;
+	-webkit-transform: translate(14px, -10px);
+	-moz-transform: translate(14px, -10px);
+	-ms-transform: translate(14px, -10px);
+	-o-transform: translate(14px, -10px);
+	transform: translate(14px, -10px);
+}
+.messages.other .message {
+	position: relative;
+	-webkit-transform: translate3d(0, 0, 0);
+	-moz-transform: translate3d(0, 0, 0);
+	transform: translate3d(0, 0, 0);
+	text-align: left;
+	padding-left: 10px;
+}
+
+.messages.other .message::before {
+	content: '';
+	position: absolute;
+	z-index: -1;
+	bottom: 0;
+	left: 5px;
+	right: initial;
+	height: 10px;
+	background: #eee;
+	border-style: none;
+	border-radius: initial;
+	border-right: 20px solid #eee;
+	-webkit-border-bottom-right-radius: 20px 10px;
+	-moz-border-radius-bottomright: 20px 10px;
+	border-bottom-right-radius: 20px 10px;
+	-webkit-transform: translate(0, -10px);
+	-moz-transform: translate(0, -10px);
+	-ms-transform: translate(0, -10px);
+	-o-transform: translate(0, -10px);
+	transform: translate(0px, -10px);
+}
+.messages.other .message::after {
+	content: '';
+	position: absolute;
+	z-index: -1;
+	bottom: 0;
+	left: 5px;
+	right: initial;
+	width: 20px;
+	height: 10px;
+	background: #fff;
+	-webkit-border-bottom-right-radius: 15px 10px;
+	-moz-border-radius-bottomright: 15px 10px;
+	border-bottom-right-radius: 15px 10px;
+	-webkit-transform: translate(-14px, -10px);
+	-moz-transform: translate(-14px, -10px);
+	-ms-transform: translate(-14px, -10px);
+	-o-transform: translate(-14px, -10px);
+	transform: translate(-14px, -10px);
+}
+.datetime {
+	-webkit-box-flex: 0;
+	-moz-box-flex: 0;
+	-webkit-flex: 0 1 auto;
+	-ms-flex: 0 1 auto;
+	flex: 0 1 auto;
+	-webkit-align-self: auto;
+	-ms-flex-item-align: auto;
+	align-self: auto;
+	width: 85px;
+	text-align: right;
+	padding: 0 0 0 10px;
+	-webkit-transition: all 250ms ease-in-out;
+	transition: all 250ms ease-in-out;
+	-webkit-transform: translate3d(10px, 0, 0);
+	-moz-transform: translate3d(10px, 0, 0);
+	transform: translate3d(-10px, 0, 0);
+}
+.time {
+	-webkit-box-flex: 0;
+	-moz-box-flex: 0;
+	-webkit-flex: 0 1 auto;
+	-ms-flex: 0 1 auto;
+	flex: 0 1 auto;
+	-webkit-align-self: auto;
+	-ms-flex-item-align: auto;
+	align-self: auto;
+	width: 120px;
+	text-align: center;
+	padding: 0 0 0 0;
+	-webkit-transition: all 250ms ease-in-out;
+	transition: all 250ms ease-in-out;
+	-webkit-transform: translate3d(10px, 0, 0);
+	-moz-transform: translate3d(10px, 0, 0);
+	transform: translate3d(10px, 0, 0);
+}
+.time.slide-right {
+	-webkit-transform: translate3d(100px, 0, 0);
+	-moz-transform: translate3d(100px, 0, 0);
+	transform: translate3d(100px, 0, 0);
+}
+
+.messages.other .message.slide-right {
+	-webkit-transform: translate3d(120px, 0, 0);
+	-moz-transform: translate3d(120px, 0, 0);
+	transform: translate3d(120px, 0, 0);
+}
+.messages.other span {
+	color: #777777;
+	background-color: #EEEEEE;
+}
+.messages span {
+	background: #D7E4ED;
+	display: inline-block;
+	color: #000;
+	padding: 10px;
+	border-radius: 15px;
+	text-align: left;
+	max-width: 240px;
+}
+.messages p.chat-typing {
+	font-weight: bold;
+	margin: 0;
+}
+.message-box {
+	display: flex;
+	width: 100%;
+}
+.footer-btn-wrap {
+	margin-left:5px;
+}
+.footer-btn {
+	font-size: 17px;
+	border-color: transparent;
+	background: none;
+}
+.item-data {
+	cursor: pointer;
+}
+.two-line-btn {
+	line-height: 1px;
+}
+.two-line-btn label{
+	display: block;
+}
+.item .icon .icon-badge {
+	position: absolute;
+	top: 3px;
+	right: 0px;
+	font-size: 8px;
+}
+.sendmessage {
+	display: flex;
+	width: 100%;
+}
+.search-box {
+	display: flex;
+	width: 100%;
+}
+/* loading spinner */
+.dw-loading.dw-loading-overlay {
+	background-color: rgba(255, 255, 255, .2);
+}
+.dw-loading > .dw-loading-body > .dw-loading-text {
+	color: #000;
+	font-size: 13px;
+}
+.backdrop.active {
+	background-color: rgba(0, 0, 0, 0.2);
+}
+/* login-container */
+.login-container {
+	padding:30px;
+}
+@media (max-width: 750px) {
+	.login-container .responsive-xs .col-75 {
+		-webkit-box-flex: 0;
+		-webkit-flex: 0 0 55%;
+		-moz-box-flex: 0;
+		-moz-flex: 0 0 55%;
+		-ms-flex: 0 0 55%;
+		flex: 0 0 55%;
+		max-width: 55%;
+	}
+}
+@media (max-width: 375px) {
+	.login-container .responsive-xs {
+		-webkit-box-direction: normal;
+		-moz-box-direction: normal;
+		-webkit-box-orient: vertical;
+		-moz-box-orient: vertical;
+		-webkit-flex-direction: column;
+		-ms-flex-direction: column;
+		flex-direction: column;
+	}
+    .login-container .responsive-xs .col, .login-container .responsive-xs .col-75 {
+		-webkit-box-flex: 1;
+		-webkit-flex: 1;
+		-moz-box-flex: 1;
+		-moz-flex: 1;
+		-ms-flex: 1;
+		flex: 1;
+		margin-bottom: 15px;
+		margin-left: 0;
+		max-width: 100%;
+		width: 100%;
+	}
+}
+/* update ionic.css*/
+.item-select select {
+	max-width: 100%;
+}
