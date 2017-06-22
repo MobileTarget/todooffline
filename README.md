@@ -180,7 +180,7 @@ Enjoy the final, most satisfying step.
 
 Publish app on Google play store need to follow below setp one by one.
 
-1) <a href="">Click here</a> and log in to your Google Play account. 
+1) <a href="https://accounts.google.com/signin/v2/identifier?service=googleplay&passive=1209600&continue=https%3A%2F%2Fplay.google.com%2Fstore&followup=https%3A%2F%2Fplay.google.com%2Fstore&flowName=GlifWebSignIn&flowEntry=ServiceLogin">Click here</a> and log in to your Google Play account. 
 2) Click <strong>All Applications</strong> and then click + <strong>Add new application</strong>.
 ![](https://nr1.s3.amazonaws.com/kb/160A734/1DA0FF4/1DBEA09/49/2a-b.png)
 3) Select your Default language, enter your app Title and click Upload APK.
