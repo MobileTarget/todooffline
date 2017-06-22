@@ -178,4 +178,47 @@ Enjoy the final, most satisfying step.
 <a name="publish_google_play_store"></a>
 ### Publish app to Google play store
 
+Publish app on Google play store need to follow below setp one by one.
+
+1) <a href="">Click here</a> and log in to your Google Play account. 
+2) Click <strong>All Applications</strong> and then click + <strong>Add new application</strong>.
+![](https://nr1.s3.amazonaws.com/kb/160A734/1DA0FF4/1DBEA09/49/2a-b.png)
+3) Select your Default language, enter your app Title and click Upload APK.
+
+4) Click Upload your first APK to Production.
+5) Click Browse files, and browse to your .APK file. 
+6) Click the Store Listing tab.
+7) Fill all the product details like Title, Short description, Full description.
+8) Click  + Add Screenshots to add screenshots of your app.
+
+``` 
+Note:- You must provide at least 2 screenshots of your app. To have your app displayed in the Designed for tablets section of Google Play, upload tablet screenshots.
+```
+9) Click + Add high-res icon to add your app icon (must be at least 512 X 512).
+10) Click + Add feature graphic. This is a promotional graphic that's displayed at the top of your Store Listing page in the Play Store app. 
+11) (Optional) Add a Promo Graphic to promote your app on older versions of Android and a Promo Video (YouTube video URL) to promote your app.
+12) Select your Application Type, Category, and Content Rating. 
+```
+Note:- Google Play's new content rating system requires you to also fill out a rating questionnaire.
+```
+13) Enter your contact details: website, email and phone number (optional). 
+14) You can add a link to your privacy policy in the Privacy Policy box, or select the Not submitting a privacy policy URL at this time. 
+15) Scroll to the top of the page and click Save.
+16) Click the Pricing & Distribution tab.
+17) Choose your app's price by either selecting Free, or Paid. To list you app as a paid app, you must add a merchant account to your Google Play Account. 
+```
+Note: Once you select and save your app as free, you can't change the price.
+```
+18) Select the Select All Countries check-box to enable users in all regions to access and download your app, or select specific countries from the list.
+19) Read the Consent guidelines and select the check-box to indicate that your app meets the guidelines.
+20) Read the US export laws, and select the check-box to indicate your acknowledgment. 
+21) Scroll to the top of the page and click Save.
+22) Make sure that APK, Store Listing, Content Rating and Price Distribution tabs all have a green check mark next to them:
+23) Click Ready to publish.
+24) Select Publish this app.
+
+###### Congratulations your app has been published. Within a couple of hours, your app will be available on the Google play android marketplace.
+
+
+
 
