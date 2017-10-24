@@ -1,402 +1,516 @@
-DomenowApp.service('utilityService', function($ionicLoading, $ionicPopup, $loading){
-	var appName = "Do me now";
-	this.sortByKey = function(array, key, order) {
-		return array.sort(function(a, b) {
-			var x = a[key]; var y = b[key];
-			if(order == "asc")
+		DomenowApp.service('utilityService', function ($ionicLoading, $ionicPopup, $loading) {
+  var self = this;
+	var appName = "Dri Lists";
+	self.sortByKey = function (array, key, order) {
+		return array.sort(function (a, b) {
+			var x = a[key];
+			var y = b[key];
+			if (order == "asc")
 				return ((x < y) ? -1 : ((x > y) ? 1 : 0));
 			else
 				return ((x > y) ? -1 : ((x < y) ? 1 : 0));
 		});
 	};
-	this.showAlert = function(txt, title) {
-        if (title === void 0) {
-            title = appName;
-        }
-        var alertPopup = $ionicPopup.alert({
-            title: title,
-            template: txt
-        });
-        return alertPopup;
-    };
-	this.showConfirm = function(title, message, cancelText, okText) {
+	self.showAlert = function (txt, title) {
+		if (title === void 0) {
+			title = appName;
+		}
+		var alertPopup = $ionicPopup.alert({
+			title: title,
+			template: txt
+		});
+		return alertPopup;
+	};
+	self.showConfirm = function (title, message, cancelText, okText) {
 		if (!title) {
-            title = appName;
-        }		
+			title = appName;
+		}
 		var confirmPopup = $ionicPopup.confirm({
-            title: title,
-            template: message,
+			title: title,
+			template: message,
 			cancelText: cancelText,
-        	okText: okText
+			okText: okText
 		});
 		return confirmPopup;
 	};
-	this.busyState = false;
-	this.setBusy = function(state, message, key) {
+	self.busyState = false;
+	self.setBusy = function (state, message, key) {
 		if (state === this.busyState) {
-		  return;
+			return;
 		}
-		var key = key || "loading";
+		key = key || "loading";
 		this.busyState = state;
 		if (this.busyState) {
-		  var text = message || 'Loading...';
-		  $loading.start(key);
-		  $loading.setDefaultOptions({active: true, text: text})
+			var text = message || 'Loading...';
+			$loading.start(key);
+			$loading.setDefaultOptions({
+				active: true,
+				text: text
+			});
 		} else {
-		  $loading.finish(key);
+			$loading.finish(key);
 		}
 	};
-	this.loadingState = false;
-	this.setLoading = function(state, message) {
+	self.loadingState = false;
+	self.setLoading = function (state, message) {
 		if (state === this.loadingState) {
-		  return;
+			return;
 		}
 		this.loadingState = state;
 		if (this.loadingState) {
-		  $ionicLoading.show({template: message || 'Loading...'});
+			$ionicLoading.show({
+				template: message || 'Loading...'
+			});
 		} else {
-		  $ionicLoading.hide();
+			$ionicLoading.hide();
 		}
 	};
-	this.getJsonFromUrl = function(location) {
-	  var query = location.search.substr(1);
-	  var result = {};
-	  query.split("&").forEach(function(part) {
-		var item = part.split("=");
-		result[item[0]] = decodeURIComponent(item[1]);
-	  });
-	  return result;
-	}
-})
-
-.service('HttpService', function($rootScope, $localStorage, $http, $cordovaNetwork) {
-	this.server = {
-		//baseURL: "https://platform.mybluemix.net"
-    baseURL: "https://live-platformapp.mybluemix.net"
+	self.getJsonFromUrl = function (location) {
+		var query = location.search.substr(1);
+		var result = {};
+		query.split("&").forEach(function (part) {
+			var item = part.split("=");
+			result[item[0]] = decodeURIComponent(item[1]);
+		});
+		return result;
 	};
-	this.isOnline = function () {
-		try {
-		  return $cordovaNetwork.isOnline();
-		} catch (err) {
-		  return navigator.onLine;
+
+	self.isEmpty = function (obj) {
+		if (Object.prototype.toString.call(obj) === "[object Object]") {
+			if (Object.keys(obj).length) {
+				return false;
+			} else {
+				return true;
+			}
+		} else if (Object.prototype.toString.call(obj) === "[object Array]") {
+			if (obj.length) {
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			if (obj) {
+				return false;
+			} else {
+				return true;
+			}
 		}
 	};
-	this.getServerPage = function(page_id){
-		var endpoint = this.server.baseURL + "/master_api_handler";
-		var access_token = $localStorage.access_token;
-		if(!access_token) access_token = "123456";
-		var request_data = {
-			"type": "get_page",
-			"content": {
-				"page_id": 		page_id,
-				"access_token": access_token
-			}
-		};
-		var config = {
-			headers: {"Content-Type": "application/json"},
-			params: request_data
-		};
-		var res_data = {};
-		return $http.get(endpoint, config).then(function(res) {
-			res_data = res.data;
-			res_data.status = 1;
-			return res_data;
-		}, function(err) {
-			console.log("get server page err>>>",err);
-			res_data.status = -1;
-			res_data.error = true;
-			return res_data;
-		});
-	};
-	this.updateGetUserTask = function(user_task_list){
-		var endpoint = this.server.baseURL + "/api_handler";
-		var config = {headers: {"Content-Type": "application/json"}};
-		var request_data = {
-			"type": "update_get_user_tasks",
-			"body": {
-				"user_id": "5d6065708854476d0a0c9af551271b1a",
-				"filter": { 
-					
-				},
-				"user_task_list": user_task_list
-			}
-		};
-		var res_data = {};
-		return $http.post(endpoint, request_data, config).then(function(res) {
-			res_data = res.data;
-			return res_data;
-		}, function(err) {
-			console.log("update_get_user_tasks err>>>",err);
-			res_data.status = -1;
-			return res_data;
-		});
-	};
-	this.updateGetPages = function(user_task_list){
-		var endpoint = this.server.baseURL + "/api_handler";
-		var config = {headers: {"Content-Type": "application/json"}};
-		var request_data = {
-			"type": "update_get_pages",
-			"body": {
-				"access_token":		$localStorage.access_token,
-				"user_task_list": 	user_task_list
-			}
-		};
-		var res_data = {};
-		return $http.post(endpoint, request_data, config).then(function(res) {
-			res_data = res.data;
-			return res_data;
-		}, function(err) {
-			console.log("update_get_pages err>>>",err);
-			res_data.status = -1;
-			return res_data;
-		});
-	};
+  
+  self.isExists = function(item, container) {
+      if (Object.prototype.toString.call(container) === "[object Object]") {
+          return (item in container);
+      } else if (Object.prototype.toString.call(container) === "[object Array]") {
+          return (container.indexOf(item) > -1);
+      } else {
+          return false;
+      }
+  };
+  
+  self.getUserGroups  = function(obj){
+    if(self.isEmpty(obj.data)){
+      return [];
+    }else {
+      if(self.isEmpty(obj.data.groups)){
+        return [];
+      }else{
+        var group_ids = [];
+        for(var itr in obj.data.groups){
+          if(itr){
+            group_ids.push(itr);
+          }
+        }
+        return group_ids;
+      }
+    }
+  };
 })
-.service('myService', function($rootScope, $localStorage, $http, HttpService) {
-	var self = this;
 
-	this.apiResult= {};
-	
-	this.getUserInfo= function() {
-		var apiResult = self.getApiResult();
-		return apiResult.user;
-	};
-	this.getTaskInfo= function() {
-		var apiResult = self.getApiResult();
-		//console.log(title);
-		var task_info = {
-			from_page_id:	apiResult.task.from_page_id,
-			task_id:		apiResult.task.task_id,
-			task_name:		apiResult.task.task_name,
-			child_task_id:  apiResult.task.child_task_id
+.service('HttpService', function ($rootScope, $localStorage, $http, $cordovaNetwork, APIROOT) {
+		this.server = {
+			//baseURL: "https://platform.mybluemix.net"
+			baseURL: APIROOT
 		};
-		return task_info;
-	};
-	this.getTemplateHtml= function(part) {
-		var apiResult = self.getApiResult();
-		var temp_str = "apiResult.task.template."+part+".html";
-		var template_html = eval(temp_str);
-		//console.log(template_html);
-		return template_html;
-	};
-	this.getTemplateJs= function() {
-		var apiResult = self.getApiResult();
-		var template_js = "apiResult.task.template.header.js";
-		template_js = eval(template_js);
-		//console.log(template_js);
-		return template_js;
-	};
-	this.getDetail= function() {
-		var apiResult = self.getApiResult();
-		var detailData = apiResult.detail;
-		//console.log("from myService.getDetail", detailData);
-		return detailData;
-	};
-	this.getApiResult = function(){
-		return self.apiResult;
-	};
-})
-.service('dbService', function($localStorage, utilityService, HttpService,
-							Localpages, User, Usertask, Detail, Task, Template) {
-	'use strict';
-	var self = this;
-	var userObj = {}, taskObj = {}, detailObj = {}, templateObj = {};
-	var pageResult = {
-        "page_id":  "",
-        "user":     userObj,
-        "task":     taskObj,
-        "detail":   detailObj
-	};
-	
-	this.sync = {
-        detail: -1,
-        task: -1,
-        template: -1,
-        user: -1
-    };
-    this.synced = 0;
-	this.syncMessage = "Syncing...";
-	
-	this.doSync = function(){
-		utilityService.setBusy(true, self.syncMessage);
-        
-		User.doSync();
-        Detail.doSync();
-        Task.doSync();
-        Template.doSync();
-    };
-	
-	this.syncPage = function(local_usertask, server_page) {
-		//update template
-		var updateTemplate = function() {
-			var templateObj = {
-				"header":	{
-					"_id": 	server_page.task.template.header._id,
-					"name": server_page.task.template.header.name,
-					"html": server_page.task.template.header.html,
-					"js": 	server_page.task.template.header.js
+		this.isOnline = function () {
+			//console.log("$cordovaNetwork", $cordovaNetwork.isOnline(), navigator);
+			try {
+				return $cordovaNetwork.isOnline();
+			} catch (err) {
+				return navigator.onLine;
+			}
+		};
+		this.getServerPage = function (page_id) {
+			var endpoint = this.server.baseURL + "/master_api_handler";
+			var access_token = $localStorage.access_token;
+			if (!access_token) access_token = "123456";
+			var request_data = {
+        app: {
+          api: {
+            "type": "get_page",
+            "content": {
+              "page_id": page_id,
+              "access_token": access_token
+            }
+          }
+        },
+        platform: {},
+        other_users: {}
+      };
+			var config = {
+				headers: {
+					"Content-Type": "application/json"
 				},
-				"detail":	{
-					"_id": 	server_page.task.template.detail._id,
-					"name": server_page.task.template.detail.name,
-					"html": server_page.task.template.detail.html,
-					"js": 	server_page.task.template.detail.js
-				},
-				"footer":	{
-					"_id": 	server_page.task.template.footer._id,
-					"name": server_page.task.template.footer.name,
-					"html": server_page.task.template.footer.html,
-					"js": 	server_page.task.template.footer.js
+				params: request_data
+			};
+			var res_data = {};
+			return $http.get(endpoint, config).then(function (res) {
+				res_data = res.data;
+				res_data.status = 1;
+				return res_data;
+			}, function (err) {
+				console.log("get server page err>>>", err);
+				res_data.status = -1;
+				res_data.error = true;
+				return res_data;
+			});
+		};
+		this.updateGetUserTask = function (user_task_list) {
+			var endpoint = this.server.baseURL + "/api_handler";
+			var config = {
+				headers: {
+					"Content-Type": "application/json"
 				}
 			};
-			//console.log(templateObj);
-			return Template.updateData(templateObj).then(function(result) {
-				return result;
+			var request_data = {
+				"type": "update_get_user_tasks",
+				"body": {
+					"user_id": "5d6065708854476d0a0c9af551271b1a",
+					"filter": {
+
+					},
+					"user_task_list": user_task_list
+				}
+			};
+			var res_data = {};
+			return $http.post(endpoint, request_data, config).then(function (res) {
+				res_data = res.data;
+				return res_data;
+			}, function (err) {
+				console.log("update_get_user_tasks err>>>", err);
+				res_data.status = -1;
+				return res_data;
 			});
 		};
-		//update local page
-		var updateLocalPage = function() {
-			var pageObj = {
-				"_id":		server_page.page_id,
-				"task":		{
-					"task_id":				server_page.task.task_id,
-					"task_name":			server_page.task.task_name,
-					"header_template_id": 	server_page.task.template.header._id,
-					"detail_template_id":	server_page.task.template.detail._id,
-					"footer_template_id":	server_page.task.template.footer._id,
-					"from_page_id":			server_page.task.from_page_id,
-					"child_task_id":		server_page.task.child_task_id,
-					"date_created":			server_page.task.date_created
-				},
-				"detail":	server_page.detail
+		this.updateGetPages = function (user_task_list) {
+			var endpoint = this.server.baseURL + "/api_handler";
+			var config = {
+				headers: {
+					"Content-Type": "application/json"
+				}
 			};
-			console.log("pageObj>>>", pageObj);
-			return Localpages.updatePageData(pageObj).then(function(result) {
-				return result;
+			var request_data = {
+				"type": "update_get_pages",
+				"body": {
+					"access_token": $localStorage.access_token,
+					"user_task_list": user_task_list
+				}
+			};
+			var res_data = {};
+			return $http.post(endpoint, request_data, config).then(function (res) {
+				res_data = res.data;
+				return res_data;
+			}, function (err) {
+				console.log("update_get_pages err>>>", err);
+				res_data.status = -1;
+				return res_data;
 			});
-		}
-		//update user-task
-		var updateUserTask = function() {
-			local_usertask.synchronized = 1;
-			local_usertask.dirty = 1;
-			local_usertask.task_id = server_page.task.task_id;
-			return Usertask.updateData(local_usertask).then(function(result) {
-				return result;
-			});
-		}
-		//proceed sync
-		return updateTemplate().then(function(result) {
-			console.log("1. template update response>>>", result);
-			return updateLocalPage();
-		}).then(function(result) {
-			console.log("2. local page update response>>>", result);
-			return updateUserTask();
-		}).then(function(result) {
-			console.log("3. user task update response>>>", result);
-			return Localpages.getPage(server_page.page_id).then(function(pageResult) {
-				return pageResult;
-			});
-		});
-	}
-	this.getLocalPage = function(page_id) {
-		return Usertask.getUserTask(page_id).then(function(local_usertask) {
-			console.log("get local user_task>>>", local_usertask);
-			var isOnline = HttpService.isOnline();
-			//local_usertask.synchronized=0;isOnline = false;
-			if(!local_usertask.synchronized && isOnline) {//synchronized = false, online
-				utilityService.setBusy(false);
-				utilityService.setBusy(true, self.syncMessage);
-				
-				return HttpService.getServerPage(page_id).then(function(server_page) {
-					console.log("server page response>>>", server_page);
-					if(server_page.status == -1) {
-						return {error: true};
+		};
+	})
+	.service('myService', function ($localStorage) {
+		var self = this;
+
+		this.apiResult = {};
+		this.getUserInfo = function () {
+			var apiResult = self.getApiResult() ,
+          access_token = $localStorage.access_token ;
+      if(apiResult.user) {
+        if(access_token !== apiResult.user.access_token) {
+          if(apiResult.page_id !== 1){
+            delete $localStorage.access_token;
+            $localStorage.access_token = apiResult.user.access_token ;
+          }
+        }
+      }
+			return apiResult.user;
+		};
+
+		this.getTaskInfo = function () {
+			var apiResult = self.getApiResult();
+      if(apiResult.task !== undefined){
+        var task_info = {
+          from_page_id: apiResult.task.from_page_id,
+          page_id: apiResult.task.page_id,
+          task_id: apiResult.task.task_id,
+          task_name: apiResult.task.task_name,
+          child_task_id: apiResult.task.child_task_id
+        };
+        return task_info;
+      }
+			return {};
+		};
+
+		this.getTemplateHtml = function (part) {
+			var apiResult = self.getApiResult();
+			var temp_str = "apiResult.task.template." + part + ".html";
+			var template_html = eval(temp_str);
+			//console.log(template_html);
+			return template_html;
+		};
+
+		this.getTemplateJs = function () {
+			var apiResult = self.getApiResult();
+			var template_js = "apiResult.task.template.header.js";
+			template_js = eval(template_js);
+			//console.log(template_js);
+			return template_js;
+		};
+		this.getDetail = function () {
+			var apiResult = self.getApiResult();
+			var detailData = apiResult.detail;
+			//console.log("from myService.getDetail", detailData);
+			return detailData;
+		};
+		this.getApiResult = function () {
+			return self.apiResult;
+		};
+	})
+	.service('dbService', function ($localStorage, utilityService, HttpService,
+		Localpages, User, Usertask, Detail, Task, Template) {
+		'use strict';
+		var self = this;
+		var userObj = {},
+			taskObj = {},
+			detailObj = {},
+			templateObj = {};
+
+		var pageResult = {
+			"page_id": "",
+			"user": userObj,
+			"task": taskObj,
+			"detail": detailObj
+		};
+
+		this.sync = {
+			detail: -1,
+			task: -1,
+			template: -1,
+			user: -1
+		};
+
+		this.synced = 0;
+		this.syncMessage = "Syncing...";
+
+		this.doSync = function () {
+			utilityService.setBusy(true, self.syncMessage);
+
+			User.doSync();
+			Detail.doSync();
+			Task.doSync();
+			Template.doSync();
+		};
+
+		this.syncPage = function (local_usertask, server_page) {
+			//update template
+			var updateTemplate = function () {
+				var templateObj = {
+					"header": {
+						"_id": server_page.task.template.header._id,
+						"name": server_page.task.template.header.name,
+						"html": server_page.task.template.header.html,
+						"js": server_page.task.template.header.js
+					},
+					"detail": {
+						"_id": server_page.task.template.detail._id,
+						"name": server_page.task.template.detail.name,
+						"html": server_page.task.template.detail.html,
+						"js": server_page.task.template.detail.js
+					},
+					"footer": {
+						"_id": server_page.task.template.footer._id,
+						"name": server_page.task.template.footer.name,
+						"html": server_page.task.template.footer.html,
+						"js": server_page.task.template.footer.js
 					}
-					return self.syncPage(local_usertask, server_page);
+				};
+				//console.log(templateObj);
+				return Template.updateData(templateObj).then(function (result) {
+					return result;
 				});
-			}
-			else if(local_usertask.synchronized) {
-				return Localpages.getPage(page_id).then(function(pageResult) {
-					if(typeof pageResult.error != "undefined" && pageResult.error) {
-						local_usertask.synchronized = 0;
-						local_usertask.dirty = 1;
-						Usertask.updateData(local_usertask).then(function(result) {
-							console.log("user task set sync=0>>>", result);
-						});
-					}
+			};
+			//update local page
+			var updateLocalPage = function () {
+				var pageObj = {
+					"_id": server_page.page_id,
+					"task": {
+						"task_id": server_page.task.task_id,
+						"task_name": server_page.task.task_name,
+						"header_template_id": server_page.task.template.header._id,
+						"detail_template_id": server_page.task.template.detail._id,
+						"footer_template_id": server_page.task.template.footer._id,
+						"from_page_id": server_page.task.from_page_id,
+						"child_task_id": server_page.task.child_task_id,
+						"date_created": server_page.task.date_created
+					},
+					"detail": server_page.detail
+				};
+				console.log("pageObj>>>", pageObj);
+				return Localpages.updatePageData(pageObj).then(function (result) {
+					return result;
+				});
+			};
+			//update user-task
+			var updateUserTask = function () {
+				local_usertask.synchronized = 1;
+				local_usertask.dirty = 1;
+				local_usertask.task_id = server_page.task.task_id;
+				return Usertask.updateData(local_usertask).then(function (result) {
+					return result;
+				});
+			};
+			//proceed sync
+			return updateTemplate().then(function (result) {
+				console.log("1. template update response>>>", result);
+				return updateLocalPage();
+			}).then(function (result) {
+				console.log("2. local page update response>>>", result);
+				return updateUserTask();
+			}).then(function (result) {
+				console.log("3. user task update response>>>", result);
+				return Localpages.getPage(server_page.page_id).then(function (pageResult) {
 					return pageResult;
 				});
-			}
-			else {//synchronized = false, offline
-				return Localpages.getPage(page_id).then(function(pageResult) {
-					return pageResult;
-				});
-			}
-		});
-    };
-	this.getDirtyUserTask = function() {
-		return Usertask.getDirtyList().then(function(res) {
-			return res;
-		});
-	}
-	this.updateLocalPage = function(update_page) {
-		var page_id = update_page.page_id;
-		return Usertask.getUserTask(page_id).then(function(local_usertask) {
-			console.log("get update local user_task>>>", local_usertask);
-			return self.syncPage(local_usertask, update_page);
-		});
-	}
-})
-.service('BluemixService', function ($window, $q, $localStorage, utilityService) {
-	var appGuid = "3d321d52-0b21-485a-8669-7e19684b070b";
-	var clientSecret = "49f01d0f-f469-42c6-b9db-fd0cc67bb6a8";
-	
+			});
+		};
+		this.getLocalPage = function (page_id) {
+			return Usertask.getUserTask(page_id).then(function (local_usertask) {
+				console.log("get local user_task>>>", local_usertask);
+				var isOnline = HttpService.isOnline();
+				//local_usertask.synchronized=0;isOnline = false;
+				if (!local_usertask.synchronized && isOnline) { //synchronized = false, online
+					utilityService.setBusy(false);
+					utilityService.setBusy(true, self.syncMessage);
+
+					return HttpService.getServerPage(page_id).then(function (server_page) {
+						console.log("server page response>>>", server_page);
+						if (server_page.status == -1) {
+							return {
+								error: true
+							};
+						}
+						return self.syncPage(local_usertask, server_page);
+					});
+				} else if (local_usertask.synchronized) {
+					return Localpages.getPage(page_id).then(function (pageResult) {
+						if (typeof pageResult.error != "undefined" && pageResult.error) {
+							local_usertask.synchronized = 0;
+							local_usertask.dirty = 1;
+							Usertask.updateData(local_usertask).then(function (result) {
+								console.log("user task set sync=0>>>", result);
+							});
+						}
+						return pageResult;
+					});
+				} else { //synchronized = false, offline
+					return Localpages.getPage(page_id).then(function (pageResult) {
+						return pageResult;
+					});
+				}
+			});
+		};
+		this.getDirtyUserTask = function () {
+			return Usertask.getDirtyList().then(function (res) {
+				return res;
+			});
+		};
+		this.updateLocalPage = function (update_page) {
+			var page_id = update_page.page_id;
+			return Usertask.getUserTask(page_id).then(function (local_usertask) {
+				console.log("get update local user_task>>>", local_usertask);
+				return self.syncPage(local_usertask, update_page);
+			});
+		};
+	})
+
+.service('BluemixService', function ($window, $q, $localStorage, utilityService, $rootScope) {
+//distribution credentails ...
+	var appGuid = "f9fb70f7-e91f-4e62-b713-a609fb81be59";
+    var clientSecret = "0956be68-ad37-4abd-9f98-8215dd9dc680";
+
+    //development credentails ...
+//    var appGuid = "54c56e02-ad51-4e5f-bdfa-a53ff9374943";
+//    var clientSecret = "702c6678-da8e-4a5b-b93f-6c14d8acf99b"; 
+         
 	this.connect = function () {
 		// create deferred object using $q
-		var deferred = $q.defer();
-		
+		var deferred = $q.defer(),
+			deviceId;
+
 		console.log("$localStorage.push_accepted>>>" + $localStorage.push_accepted);
-		if(window.cordova) {
-		  
-		  if(typeof $localStorage.push_accepted == "undefined"){
-			var confirm_msg = 'Would Like to Send You Push Notifications';
-			utilityService.showConfirm("", confirm_msg, "Don't Allow", "OK")
-			.then(function(res) {
-				if(res) $localStorage.push_accepted = 1;
-				else $localStorage.push_accepted = 0;
-			});
-		  }
-		  
-		  $window.BMSClient.initialize(BMSClient.REGION_US_SOUTH);
-		  
-		  var category = {};
-		  $window.BMSPush.initialize(appGuid, clientSecret, category);
-		  
-		  var success = function(resp) {
-			console.log("BMS Push Registration Success Response:" + resp);
-			var deviceId = JSON.parse(resp).deviceId;
-			deferred.resolve(deviceId);
-		  };
-		  var failure = function(resp) {
-			console.log("BMS Push Registration Failure Response:" + resp);
-			deferred.reject(resp);
-		  };
-		  var showNotification = function(notif) {
-			console.log(JSON.stringify(notif));
-			$window.navigator.notification.alert(notif.message, function(){}, "Do me now", "ok");
-		  };
-		  setTimeout(function(){
-			//alert("call register");
-			var options = {};
-			$window.BMSPush.registerDevice(options, success, failure);
-			if($localStorage.push_accepted) {
-				$window.BMSPush.registerNotificationsCallback(showNotification);
-			}
-		  }, 500);
-		  deviceId = deferred.promise;
-		}
-		else {
-			var deviceId = "Web View";
+		if (window.cordova) {
+			// currently no need to manually ask to accept push notification
+			// when system already asked to accept .
+      var isIOS = ionic.Platform.isIOS();
+      if(!isIOS){
+        var isAccepted = $localStorage.push_accepted ;
+       
+        if (!isAccepted) {
+          var confirm_msg = 'Would Like to Send You Push Notifications';
+          utilityService.showConfirm("", confirm_msg, "Don't Allow", "OK")
+            .then(function (res) {
+              if (res) {
+                $localStorage.push_accepted = 1;
+              }else {
+                $localStorage.push_accepted = 0;
+              }
+            });
+        }
+      }else{
+        $localStorage.push_accepted = 1; 
+      }
+			utilityService.setBusy(true);
+			$window.BMSClient.initialize(BMSClient.REGION_US_SOUTH);
+
+			var category = {};
+			$window.BMSPush.initialize(appGuid, clientSecret, category);
+
+			var success = function (resp) {
+				console.log("BMS Push Registration Success Response:" + resp);
+				deviceId = JSON.parse(resp).deviceId;
+				deferred.resolve(deviceId);
+				utilityService.setBusy(false);
+			};
+			var failure = function (resp) {
+				console.log("BMS Push Registration Failure Response:" + resp);
+				deferred.reject(resp);
+				utilityService.setBusy(false); 
+			};
+			var showNotification = function (notif) {
+				//console.log("Push notificatoin recieved successfully in bluemixServcie from here>>>>>>>>>", JSON.stringify(notif));
+        $rootScope.$broadcast("push$Notification$CallBack$Listner", notif);
+				//$window.navigator.notification.alert(notif.message, function () {}, "Dri List notification", "ok");
+			};
+			setTimeout(function () {
+				//alert("call register");
+				var options = {};
+				$window.BMSPush.registerDevice(options, success, failure);
+				if ($localStorage.push_accepted) {
+					$window.BMSPush.registerNotificationsCallback(showNotification);
+				}
+			}, 500);
+
+			deviceId = deferred.promise;
+		} else {
+			deviceId = "Web View";
 			$localStorage.push_accepted = 0;
 		}
 		return $q.when(deviceId);
@@ -406,154 +520,189 @@ DomenowApp.service('utilityService', function($ionicLoading, $ionicPopup, $loadi
 
 
 
+.factory('Users', function () {
+	var usernames = [];
+	usernames.numUsers = 0;
 
-
-.factory('Users', function(){
-    var usernames = [];
-    usernames.numUsers = 0;
-
-    return {
-      getUsers: function(){
-        return usernames;
-      },
-      addUsername: function(username){
-        usernames.push(username);
-      },
-      deleteUsername: function(username){
-        var index = usernames.indexOf(username);
-        if(index != -1){
-          usernames.splice(index, 1);
-        }
-      },
-      setNumUsers: function(data){
-        usernames.numUsers = data.numUsers;
-      }
-  };
+	return {
+		getUsers: function () {
+			return usernames;
+		},
+		addUsername: function (username) {
+			usernames.push(username);
+		},
+		deleteUsername: function (username) {
+			var index = usernames.indexOf(username);
+			if (index != -1) {
+				usernames.splice(index, 1);
+			}
+		},
+		setNumUsers: function (data) {
+			usernames.numUsers = data.numUsers;
+		}
+	};
 })
 
-.factory('Socket', function(socketFactory){
-  var server = 'http://offlinechat.mybluemix.net';
-  //'http://offlinechat.mybluemix.net'; //http://chat.socket.io:80
-  var myIoSocket = io.connect(server);
-  mySocket = socketFactory({
-    ioSocket: myIoSocket
-  });
-  return mySocket;
-})
+.factory('Socket', function (socketFactory, SOCKET_ROOT) {
+		//var server = 'http://offlinechat.mybluemix.net';
+		//'http://offlinechat.mybluemix.net'; //http://chat.socket.io:80
+		var myIoSocket = io.connect(SOCKET_ROOT);
+		mySocket = socketFactory({
+			ioSocket: myIoSocket
+		});
+		return myIoSocket;
+	})
 
-.factory('Chat', function($ionicScrollDelegate, Socket, Users){
 
-  var username;
-  var users = {};
-  users.numUsers = 0;
-
-  var messages = [];
-  var TYPING_MSG = '. . .';
-
-  var Notification = function(username,message){
-    var notification          = {};
-    notification.username     = username;
-    notification.message      = message;
-    notification.notification = true;
-    return notification;
-  };
-
-  Socket.on('login', function (data) {
-    Users.setNumUsers(data);
-  });
-
-  Socket.on('new message', function(msg){
-      addMessage(msg);
-  });
-
-  Socket.on('typing', function (data) {
-    var typingMsg = {
-      username: data.username,
-      message: TYPING_MSG
-    };
-    addMessage(typingMsg);
-  });
-
-  Socket.on('stop typing', function (data) {
-    removeTypingMessage(data.username);
-  });
-
-  Socket.on('user joined', function (data) {
-    var msg = data.username + ' joined';
-    var notification = new Notification(data.username,msg);
-    //addMessage(notification);
-    //Users.setNumUsers(data);
-    //Users.addUsername(data.username);
-  });
-
-  Socket.on('user left', function (data) {
-    var msg = data.username + ' left';
-    var notification = new Notification(data.username,msg);
-    //addMessage(notification);
-    Users.setNumUsers(data);
-    Users.deleteUsername(data.username);
-  });
-
-  var scrollBottom = function(){
-    $ionicScrollDelegate.resize();
-    $ionicScrollDelegate.scrollBottom(true);
-  };
-  
-  var currDateTime = function(){
-	var d = new Date();
-	dt = d.toLocaleDateString()+' '+d.toLocaleTimeString().replace(/:\d+ /, ' ');
-	return dt;
-  };
-  var addMessage = function(msg){
-    var addData = {};
-	addData.notification = msg.notification || false;
-	addData.user_id = msg.user_id;
-	addData.username = msg.username;
-	addData.text = msg.message;
-	addData.date_created = currDateTime();
-	console.log(addData);
-    messages.push(addData);
-    scrollBottom();
-  };
-
-  var removeTypingMessage = function(usr){
-    for (var i = messages.length - 1; i >= 0; i--) {
-      if(messages[i].username === usr && messages[i].text.indexOf(TYPING_MSG) > -1){
-        messages.splice(i, 1);
-        scrollBottom();
-        break;
-      }
-    }
-  };
-
-  return {
-    getUsername: function(){
-      return username;
-    },
-    setUsername: function(usr){
-      username = usr;
-    },
-    setMessages: function(msg) {
-		angular.extend(messages, msg); 
-    },
-	getMessages: function() {
-      return messages;
-    },
-    sendMessage: function(user_id, message){
-		var sendData = {
-		  user_id:	user_id,
-		  type:		"mine",
-		  message:	message,
-		  date_created: currDateTime()
+	.service('SocketBroadCastEvents', function (Socket, myService, $localStorage, utilityService) {
+		this.typing = function (data) {
+      data.deviceType = $localStorage.deviceType;
+      data.fingerPrint = $localStorage.deviceFingerPrint;
+			Socket.emit('$typing$event', data);
 		};
-		console.log(sendData);
-		messages.push(sendData);
-		scrollBottom();
-		Socket.emit('new message', message);
-    },
-    scrollBottom: function(){
-      scrollBottom();
-    }
-  };
-})
+    
+    this.onAppPause = function () {
+      var user_data = myService.getUserInfo(),
+          task_data = myService.getTaskInfo();
+      try{
+        if(user_data !== undefined && task_data !== undefined){
+          if(task_data.page_id !== 1 || task_data.page_id !== 11){
+            Socket.emit('$onAppPause$event', {
+              deviceType: $localStorage.deviceType,
+              fingerPrint: $localStorage.deviceFingerPrint, 
+              user_id: user_data._id || $localStorage.user_id,
+              subcription_ids: task_data.page_id,
+              identifier: ( (task_data.page_id == 18) ? user_data.virtual_phone : task_data.name ),
+              current_page_id: task_data.page_id,
+              outbound_message: null
+            });
+          }
+        }
+      }catch(e){
+        console.log("Exception raised on Socket onAppStart event", e);
+      }
+		};
 
+		this.onAppResume = function () {
+      var user_data = myService.getUserInfo(),
+          task_data = myService.getTaskInfo(),
+          group_ids = utilityService.getUserGroups(user_data);
+      try{
+        Socket.emit('$onAppResume$event', {
+          deviceType: $localStorage.deviceType,
+          fingerPrint: $localStorage.deviceFingerPrint, 
+          user_id: user_data._id || $localStorage.user_id,
+          group_ids: group_ids,
+          identifier: ( (task_data.page_id == 18) ? user_data.virtual_phone : task_data.task_name ),
+          subcription_ids: task_data.page_id,
+          current_page_id: task_data.page_id,
+          outbound_message: null
+        });
+      }catch(e){
+        console.log("Exception raised on Socket onAppStart event", e);  
+      }          
+		};
+    
+    this.onPageChangeSuccessfully = function(page_id){
+      var user_data = myService.getUserInfo(),
+          task_data = myService.getTaskInfo();
+        
+      try{
+        if(user_data !== undefined){
+          if(page_id !== 1 || page_id !== 11){
+            var group_ids = utilityService.getUserGroups(user_data); ///NEED Tto debug from here..... in web browser
+            
+            Socket.emit('$onPageChange$Event', {
+              deviceType: $localStorage.deviceType,
+              fingerPrint: $localStorage.deviceFingerPrint, 
+              user_id: user_data._id || $localStorage.user_id,
+              group_ids: group_ids,
+              identifier: ( (page_id == 18) ? user_data.virtual_phone : task_data.task_name ) ,
+              subcription_ids: page_id,
+              current_page_id: page_id,
+              outbound_message: null
+            });
+          }
+        }
+      }catch(e){
+        console.log("Exception raised on Socket onAppStart event", e);  
+      }
+    };
+    
+		this.stopTyping = function (data) {
+      data.deviceType = $localStorage.deviceType;
+      data.fingerPrint = $localStorage.deviceFingerPrint;
+			Socket.emit('$stop$typing$event', data);
+		};
+
+		this.pushMessage = function (data) {
+			Socket.emit('$push$message$event', data);
+		};
+    
+    this.logout = function(data){
+      if(utilityService.isEmpty(data)) data = {};
+      data.deviceType = $localStorage.deviceType || null;
+      data.fingerPrint = $localStorage.deviceFingerPrint || null;
+      Socket.emit("disconnect", data);
+    };
+    
+    this.sendNewPagesToWebSocketServer = function(userId, data){
+      Socket.emit("$Store$New$Page$data", {
+        userId: userId,
+        deviceType: $localStorage.deviceType || null ,
+        fingerPrint: $localStorage.deviceFingerPrint || null ,
+        newPages: data
+      });
+    };
+    
+    this.getUpdatedPageIds = function(fingerPrint, userId){
+      if(utilityService.isEmpty(fingerPrint) || utilityService.isEmpty(userId)){
+        console.warn("Cannot get updatedPages from web-socket due to either fingerPrint or userID is not available", fingerPrint, userId);
+      }else{
+        Socket.emit("$check$Updated$Pages$On$App$Init", {fingerPrint: fingerPrint, userId: userId});
+      }
+    };
+	})
+	.service('SocketListnerEvents', function (Socket) {
+		this.typingListner = function (callback) {
+			Socket.on('$typing$event', function (data) {
+				callback(null, data);
+			});
+		};
+
+		this.stopTypingListner = function (callback) {
+			Socket.on('$stop$typing$event', function (data) {
+				callback(null, data);
+			});
+		};
+
+		this.messageListner = function (callback) {
+			Socket.on('$push$message$event', function (data) {
+				callback(null, data);
+			});
+		};
+        
+        this.newDataFromRecievedServer = function(callback){
+            Socket.on('$new$Item$pushed$By$server', function(data){
+                callback(null, data);
+            });
+        };
+    
+        this.isPageRefreshRequired = function (callback){
+            Socket.on('$notify$Connected$Users$From$Server', function(data){
+                callback(null, data);
+            });
+        };
+    
+        this.updateLocalDbPagesWithServer = function(callback){
+            Socket.on('$check$Updated$Pages$On$App$Init', function(page_ids){
+                callback(null, page_ids);
+            });
+        };
+        
+        this.someDataIsAddedByOperator = function(callback){
+             Socket.on('$added$data$from$operator', function(data){
+                callback(null, data);
+             })
+        };
+	});
